@@ -29,8 +29,27 @@ body {
   background:
     radial-gradient(circle at 5% 0%, rgba(15, 91, 234, 0.12), transparent 28%),
     radial-gradient(circle at 95% 20%, rgba(0, 180, 216, 0.12), transparent 32%),
+    radial-gradient(rgba(15, 91, 234, 0.09) 1px, transparent 1px),
     #f7faff;
+  background-size: auto, auto, 26px 26px, auto;
   line-height: 1.65;
+}
+
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  z-index: 200;
+  background: transparent;
+}
+
+.scroll-progress-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--primary), var(--accent), var(--secondary));
+  transition: width 0.1s linear;
 }
 
 body.menu-open {
@@ -208,6 +227,39 @@ h1 {
   letter-spacing: -0.075em;
 }
 
+.gradient-text {
+  background: linear-gradient(100deg, var(--primary) 0%, var(--accent) 45%, var(--secondary) 90%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient-shift 6s ease-in-out infinite;
+}
+
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% center; }
+  50% { background-position: 100% center; }
+}
+
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #16a34a;
+  box-shadow: 0 0 0 rgba(22, 163, 74, 0.55);
+  animation: pulse-ring 1.8s infinite;
+}
+
+.pulse-dot-light {
+  background: #22c55e;
+}
+
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.55); }
+  70% { box-shadow: 0 0 0 8px rgba(22, 163, 74, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(22, 163, 74, 0); }
+}
+
 h2 {
   margin: 13px 0 0;
   font-size: clamp(2rem, 4vw, 3.4rem);
@@ -309,6 +361,23 @@ h3 {
   border: 1px solid rgba(219, 229, 245, 0.9);
   box-shadow: var(--shadow);
   position: relative;
+}
+
+.photo-frame::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: 38px;
+  padding: 2px;
+  background: linear-gradient(135deg, var(--primary), var(--accent), var(--secondary));
+  background-size: 220% 220%;
+  animation: gradient-shift 6s ease-in-out infinite;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0.85;
+  z-index: 3;
+  pointer-events: none;
 }
 
 .photo-frame::before {
@@ -445,6 +514,76 @@ h3 {
   font-size: 0.94rem;
 }
 
+.strengths-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+}
+
+.strength-card {
+  position: relative;
+  border-radius: var(--radius);
+  padding: 26px 22px;
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(219, 229, 245, 0.9);
+  box-shadow: 0 16px 45px rgba(8, 30, 70, 0.08);
+  backdrop-filter: blur(14px);
+  overflow: hidden;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.strength-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(15, 91, 234, 0.06), rgba(124, 58, 237, 0.05));
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.strength-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 26px 56px rgba(8, 30, 70, 0.15);
+  border-color: rgba(15, 91, 234, 0.3);
+}
+
+.strength-card:hover::before {
+  opacity: 1;
+}
+
+.strength-num {
+  display: inline-block;
+  font-size: 0.82rem;
+  font-weight: 900;
+  color: var(--primary);
+  background: rgba(15, 91, 234, 0.08);
+  border-radius: 999px;
+  padding: 5px 11px;
+  margin-bottom: 14px;
+  letter-spacing: 0.04em;
+}
+
+.strength-card h3 {
+  font-size: 1.08rem;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.strength-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  position: relative;
+}
+
+.nav-links a.active-link {
+  color: var(--primary);
+}
+
+.nav-links a.active-link::after {
+  width: 100%;
+}
+
 .skills-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -463,6 +602,10 @@ h3 {
 .education-card:hover {
   transform: translateY(-6px);
   box-shadow: 0 24px 56px rgba(8, 30, 70, 0.13);
+}
+
+.project-card:hover {
+  border-color: rgba(15, 91, 234, 0.32);
 }
 
 .skill-icon {
@@ -753,7 +896,8 @@ h3 {
   }
 
   .skills-grid,
-  .education-grid {
+  .education-grid,
+  .strengths-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
@@ -811,7 +955,8 @@ h3 {
   .hero-stats,
   .skills-grid,
   .projects-grid,
-  .education-grid {
+  .education-grid,
+  .strengths-grid {
     grid-template-columns: 1fr;
   }
 
